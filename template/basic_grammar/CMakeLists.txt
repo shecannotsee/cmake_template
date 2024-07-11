@@ -59,4 +59,14 @@ foreach(item IN LISTS MY_LIST)
     PRINT_ITEM("item: ${item}")
 endforeach()
 
+# test sample: cmake -Dcommand_line_t2=t2 -Dcommand_line_t1=t1 ..
+# change var from command line
+set(command_line_t1 "file default" CACHE STRING "test var")
+PRINT_ITEM("command_line:${command_line_t1}")
+
+if(NOT DEFINED command_line_t2)
+    set(command_line_t2 "file default")
+endif()
+PRINT_ITEM("command_line:${command_line_t2}")
+
 message(STATUS "test done---------------------------------------------------------------------------------------------")
