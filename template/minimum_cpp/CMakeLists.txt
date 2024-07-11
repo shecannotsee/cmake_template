@@ -2,8 +2,8 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
 # set project information
-set(PROJECT_NAME "a0514e860ae791ae88852c0a675e0df4a")
-PROJECT(${PROJECT_NAME}
+set(project_name "a0514e860ae791ae88852c0a675e0df4a")
+PROJECT(${project_name}
         VERSION 0.0.1
         LANGUAGES CXX
 )
@@ -19,7 +19,7 @@ link_directories()
 
 # add source code file
 file(GLOB_RECURSE SRC "${CMAKE_SOURCE_DIR}/main.cpp")
-add_executable(${PROJECT_NAME} ${SRC})
+add_executable(${project_name} ${SRC})
 
 # link
-target_link_libraries(${PROJECT_NAME})
+target_link_libraries(${project_name})
