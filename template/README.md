@@ -11,3 +11,6 @@
 - 构建测试：通常使用`BUILD_TESTS`，例如`cmake -DBUILD_TESTS=OFF ..`
 
 - 对于一些库目录的指定，一般通过`XXX_ROOT_DIR`，例如指定boost库目录`cmake -DBOOST_ROOT_DIR=./boost ..`
+
+- 常用的cmake命令`cmake -DCMAKE_INSTALL_PREFIX=./ -DCMAKE_BUILD_TYPE=Release ..`
+
