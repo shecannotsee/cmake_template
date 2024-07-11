@@ -74,4 +74,16 @@ if(NOT DEFINED command_line_t3)
 endif()
 PRINT_MESSAGE("command_line_t3:${command_line_t3}")
 
+# link lib test
+set(link_libs "lib1")
+# add: lib2 lib3 lib4
+list(APPEND link_libs "lib2" "lib3" "lib4")
+list(APPEND link_libs "lib5")
+PRINT_MESSAGE("link_libs:${link_libs}")
+
+add_executable(temp main.cpp)
+# clang++ -g  main.cpp -o temp -llib1  -llib2  -llib3  -llib4  -llib5
+target_link_libraries(temp ${link_libs})
+
+
 message(STATUS "test done---------------------------------------------------------------------------------------------")
