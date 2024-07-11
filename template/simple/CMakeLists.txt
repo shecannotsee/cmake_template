@@ -5,19 +5,20 @@ cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 set(project_name "a0514e860ae791ae88852c0a675e0df4a")
 PROJECT(${project_name} VERSION 0.0.1 LANGUAGES CXX)
 
-# project_type: [library] or [application]
-set(project_type "library")
+if (NOT DEFINED project_type)
+    # project_type: [library] or [application]
+    set(project_type "library")
+endif ()
 
 ########################################################################################################################
 # external settings                                                                                                    #
 ########################################################################################################################
-option(build_application "build with application" OFF)
-if (build_application STREQUAL ON)
-    set(project_type "application")
+if (NOT DEFINED CMAKE_INSTALL_PREFIX)
+    set(CMAKE_INSTALL_PREFIX "/")
 endif ()
-# CMAKE_BUILD_TYPE: [Release] or [Debug] or [MinSizeRel]
+option(build_release "build release" OFF)
 option(build_tests "build with test target" ON)
-option(BUILD_SHARED_LIBS "enable shared libs" ON)
+option(build_shared_libs "enable shared libs" ON)
 
 ########################################################################################################################
 # compilation options                                                                                                  #
@@ -25,15 +26,27 @@ option(BUILD_SHARED_LIBS "enable shared libs" ON)
 # set cpp standard
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# debug symbol
-set(CMAKE_CXX_FLAGS "-g")
+
+set(CMAKE_CXX_FLAGS "-Wall")
+if (build_release STREQUAL ON)
+    set(CMAKE_BUILD_TYPE "Release")
+    set(CMAKE_CXX_FLAGS "-O2")
+else ()
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
+        # do nothing
+    else ()
+        set(CMAKE_BUILD_TYPE "Debug")
+        set(CMAKE_CXX_FLAGS "-g") # debug symbol
+        set(CMAKE_CXX_FLAGS "-O0")
+    endif ()
+endif ()
 
 ########################################################################################################################
 # common targets name settings                                                                                         #
 ########################################################################################################################
 # src target
 set(library_static_name "${project_name}_static")
-if (BUILD_SHARED_LIBS STREQUAL ON)
+if (build_shared_libs STREQUAL ON)
     set(library_dynamic_name "${project_name}_dynamic")
 endif ()
 
@@ -83,7 +96,7 @@ add_library(${library_static_name} STATIC ${src})
 set_target_properties(${library_static_name} PROPERTIES OUTPUT_NAME ${project_name})
 target_link_libraries(${library_static_name} PRIVATE ${src_link_dependency})
 
-if (BUILD_SHARED_LIBS STREQUAL ON)
+if (build_shared_libs STREQUAL ON)
     add_library(${library_dynamic_name} SHARED ${src})
     # Rename the generated dynamic library
     set_target_properties(${library_dynamic_name} PROPERTIES OUTPUT_NAME ${project_name})
@@ -121,6 +134,7 @@ if (build_tests STREQUAL ON)
     )
 endif ()
 
+# application install
 if (project_type STREQUAL "application")
     install(TARGETS
             ${application_name}
@@ -128,7 +142,6 @@ if (project_type STREQUAL "application")
             ${project_name}/bin
     )
 endif ()
-
 
 # include install
 install(FILES
@@ -139,10 +152,18 @@ install(FILES
 # lib install
 install(TARGETS
         ${library_static_name}
-        ${library_dynamic_name}
         DESTINATION
         ${project_name}/lib
 )
+# shared libs install
+if (build_shared_libs STREQUAL ON)
+    install(TARGETS
+            ${library_dynamic_name}
+            DESTINATION
+            ${project_name}/lib
+    )
+endif ()
+
 # cmake install
 #install(FILES
 #        ${CMAKE_SOURCE_DIR}/cmake/${project_name}-config.cmake
