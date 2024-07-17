@@ -66,11 +66,11 @@ set(command_line_t2 "2")
 PRINT_MESSAGE("init command_line_t1: ${command_line_t1}")
 PRINT_MESSAGE("init command_line_t2: ${command_line_t2}")
 
-set(command_line_t1 "file default" CACHE STRING "test var")
+set(command_line_t1 "file_default_value" CACHE STRING "describe: this is a test var")
 PRINT_MESSAGE("command_line_t1:${command_line_t1}")
 
 if(NOT DEFINED command_line_t3)
-    set(command_line_t3 "file default")
+    set(command_line_t3 "file_default")
 endif()
 PRINT_MESSAGE("command_line_t3:${command_line_t3}")
 
